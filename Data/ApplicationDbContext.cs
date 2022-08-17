@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Tourist_Place.Models.Entity;
 
 namespace Tourist_Place.Data
 {
@@ -12,5 +13,6 @@ namespace Tourist_Place.Data
             : base(options)
         {
         }
+        public DbSet<Tourist_Place.Models.Entity.Place> Place { get; set; }
     }
 }
