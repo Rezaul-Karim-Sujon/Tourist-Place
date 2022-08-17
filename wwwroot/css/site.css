@@ -80,3 +80,7 @@ body {
     height: 200px;
     width: 240px;
 }
+
+.form-control {
+    padding: 0.175rem 0.75rem;
+}
