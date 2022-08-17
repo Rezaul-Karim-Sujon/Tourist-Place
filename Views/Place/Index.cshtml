@@ -6,11 +6,8 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<table class="table table-active table-hover">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.PlaceName)
@@ -27,7 +24,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Picture)
             </th>
-            <th></th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -46,14 +43,18 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Picture)
+                <img src="~/img/@Url.Content(item.Picture)"/>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.PlaceID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PlaceID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PlaceID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.PlaceID" type="button" class="btn btn-primary">Edit</a> 
+                <a asp-action="Details" asp-route-id="@item.PlaceID" type="button" class="btn btn-success">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.PlaceID" type="button" class="btn btn-danger">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<p>
+    <button asp-action="Create" type="button" class="btn btn-warning btn-lg"> Add New Tourist Place </button>
+</p>

@@ -9,9 +9,9 @@ namespace Tourist_Place.Controllers
     {
         List<Place> places = new List<Place>()
         {
-            new Place { PlaceID = 1, PlaceName = "Mohasthan Ghor", Address = "Comilla", Rating = 3, Type = 4, Picture = "Mohasthan Ghor Picture"},
-            new Place { PlaceID = 2, PlaceName = "Lalbagh Fort", Address = "Lalbagh", Rating = 2, Type = 4, Picture = "Lalbagh Fort Picture"},
-            new Place { PlaceID = 3, PlaceName = "Everest", Address = "Tibet, Nepal", Rating = 5, Type = 2, Picture = "Everest Picture"}
+            new Place { PlaceID = 1, PlaceName = "Mohasthan Ghor", Address = "Comilla", Rating = 3, Type = 4, Picture = "Mahasthan Ghor.jpg"},
+            new Place { PlaceID = 2, PlaceName = "Lalbagh Fort", Address = "Lalbagh", Rating = 2, Type = 4, Picture = "LalbaghFort.jpg"},
+            new Place { PlaceID = 3, PlaceName = "Everest", Address = "Tibet, Nepal", Rating = 5, Type = 2, Picture = "Everest.jpg"}
         };
         // GET: PlaceController
         public ActionResult Index()
