@@ -78,9 +78,16 @@ namespace Tourist_Place.Controllers
         }
 
         // GET: PlaceController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if(id == null || id >= places.Count)
+            {
+                return NotFound();
+            }
+            var place = places[(int)id];
+            PopulatePlaceTypesDropDownList(place.Type);
+            ViewData["PlaceID"] = id;
+            return View(place);
         }
 
         // POST: PlaceController/Edit/5
