@@ -47,8 +47,9 @@ namespace Tourist_Place.Controllers
                 return NotFound();
             }
             var place = places[(int)id];
-            var index = placeTypes.FindIndex(s => s.PlaceTypeID==place.Type);
+            var index = placeTypes.FindIndex(s => s.PlaceTypeID == place.Type);
             ViewBag.PlaceType = placeTypes[index].PlaceTypeName;
+            ViewData["PlaceID"] = id;
             return View(place);
         }
 
@@ -100,36 +101,70 @@ namespace Tourist_Place.Controllers
         // POST: PlaceController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [FromForm] VMPlaces filter)
+        public ActionResult Edit(int? id, [FromForm] VMPlaces filter)
         {
+            if(id == null || id >= places.Count)
+            {
+                return NotFound();
+            }
             try
             {
+                var index = (int)id;
+                if (ModelState.IsValid)
+                {
+                    var PicturePath = UploadFileControl.FileName(filter.Picture,
+                                                            string.Concat(_webHostEnvironment.WebRootPath,
+                                                            Location.ImagePath.NoTilde()));
+                    places[index].PlaceName = filter.PlaceName;
+                    places[index].Address = filter.Address;
+                    places[index].Type = filter.Type;
+                    places[index].Rating = filter.Rating;
+                    if(filter.Picture != null ) places[index].Picture = Location.ImagePath + PicturePath;
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+                PopulatePlaceTypesDropDownList(filter.Type);
                 return View();
             }
         }
 
         // GET: PlaceController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if(id==null || id >= places.Count)
+            {
+                return NotFound();
+            }
+            var place = places[(int)id];
+            var index = placeTypes.FindIndex(s => s.PlaceTypeID == place.Type);
+            ViewBag.PlaceType = placeTypes[index].PlaceTypeName;
+            ViewData["PlaceID"] = id;
+            return View(place);
         }
 
         // POST: PlaceController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int? id)
         {
+            if(id == null || id >= places.Count)
+            {
+                return NotFound();
+            }
             try
             {
+                places.RemoveAt((int)id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                var place = places[(int)id];
+                var index = placeTypes.FindIndex(s => s.PlaceTypeID == place.Type);
+                ViewBag.PlaceType = placeTypes[index].PlaceTypeName;
+                ViewData["PlaceID"] = id;
+                return View(place);
             }
         }
 

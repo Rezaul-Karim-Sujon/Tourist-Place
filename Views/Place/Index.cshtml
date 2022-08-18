@@ -39,7 +39,7 @@
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>
             <td>
-                <img src="@Url.Content(item.Picture)"/>
+                    <img src="@Url.Content(item.Picture)" class="img-thumbnail img-fluid img-resize"/>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@i" type="button" class="btn btn-primary">Edit</a> 

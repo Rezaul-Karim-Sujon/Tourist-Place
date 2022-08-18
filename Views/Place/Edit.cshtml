@@ -35,19 +35,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="Picture" ></label>
-                <input asp-for="Picture" class="form-control" type="file"/>
+                <input data-val="false" asp-for="Picture" class="form-control" type="file"/>
                 <span asp-validation-for="Picture" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input asp-route-id="@ViewData["PlaceID"]" type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Back to Tourist Place List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
