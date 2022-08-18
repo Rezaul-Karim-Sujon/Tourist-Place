@@ -4,8 +4,8 @@ namespace Tourist_Place.Models.Entity
 {
     public class Place
     {
-        //[Required]
-        //public int PlaceID { get; set; }
+        [Required]
+        public int PlaceID { get; set; }
 
         [Required]
         [Display(Name = "Name")]

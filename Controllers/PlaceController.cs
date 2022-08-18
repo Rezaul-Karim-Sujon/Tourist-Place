@@ -40,9 +40,16 @@ namespace Tourist_Place.Controllers
             return View(places);
         }
         // GET: PlaceController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            if(id == null || id >= places.Count)
+            {
+                return NotFound();
+            }
+            var place = places[(int)id];
+            var index = placeTypes.FindIndex(s => s.PlaceTypeID==place.Type);
+            ViewBag.PlaceType = placeTypes[index].PlaceTypeName;
+            return View(place);
         }
 
         // GET: PlaceController/Create
@@ -93,7 +100,7 @@ namespace Tourist_Place.Controllers
         // POST: PlaceController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, [FromForm] VMPlaces filter)
         {
             try
             {
