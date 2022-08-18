@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata;
 using Tourist_Place.Models.Entity;
 using Tourist_Place.Models.Others;
@@ -35,9 +36,15 @@ namespace Tourist_Place.Controllers
             new PlaceType { PlaceTypeID = 4, PlaceTypeName = "Landmark" }
         };
         // GET: PlaceController
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string searchString)
         {
-            return View(places);
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" 
+                                                                       : "";
+            ViewData["RatingSortParm"] = sortOrder == "rating" ? "ratingDesc" 
+                                                               : "rating";
+            ViewData["CurrentFilter"] = searchString;
+            var tempPlaces = Helper.SearchingAndSortingList(places, searchString, sortOrder);
+            return View(tempPlaces);
         }
         // GET: PlaceController/Details/5
         public ActionResult Details(int? id)
@@ -153,6 +160,7 @@ namespace Tourist_Place.Controllers
             {
                 return NotFound();
             }
+
             try
             {
                 places.RemoveAt((int)id);
