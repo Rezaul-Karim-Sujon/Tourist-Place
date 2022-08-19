@@ -84,3 +84,27 @@ body {
 .form-control {
     padding: 0.175rem 0.75rem;
 }
+
+
+.touristTableSearchbar {
+    overflow: hidden;
+}
+
+.touristTableSearchbar .Search-Container input {
+    padding: 6px;
+    margin: 8px 0px 8px 8px;
+    font-size: 15px;
+    text-indent: 28px;
+    border-radius: 8px;
+    background-image: url('/img/searchicon.png');
+    background-position: 10px 9px;
+    background-repeat: no-repeat;
+    background-size: 21px;
+    width: 300px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+.touristTableSearchbar .Search-Container input:focus {
+    width: 50%;
+}
