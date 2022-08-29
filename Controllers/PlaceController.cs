@@ -108,7 +108,6 @@ namespace Tourist_Place.Controllers
             var place = places.FirstOrDefault(p => p.PlaceName == placeName);
             PopulatePlaceTypesDropDownList(place.Type);
             ViewData["PrevPlaceName"] = placeName;
-            //ViewBag.Place = placeName;
             return View(place);
         }
 
