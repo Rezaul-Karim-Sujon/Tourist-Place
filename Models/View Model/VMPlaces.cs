@@ -8,7 +8,6 @@ namespace Tourist_Place.Models.View_Model
     public class VMPlaces
     {
         //public int PlaceID { get; set; }
-
         public string PlaceName { get; set; }
         public string Address { get; set; }
         public int Rating { get; set; }

@@ -28,13 +28,14 @@ namespace Tourist_Place.Controllers
             new Place { PlaceName = "Lalbagh Fort", Address = "Lalbagh", Rating = 2, Type = 4, Picture = "~/img/LalbaghFort.jpg"},
             new Place { PlaceName = "Everest", Address = "Tibet, Nepal", Rating = 5, Type = 2, Picture = "~/img/Everest.jpg"}
         };
-        public static List<PlaceType> placeTypes = new List<PlaceType>()
+        private static List<PlaceType> placeTypes = new List<PlaceType>()
         {
             new PlaceType { PlaceTypeID = 1, PlaceTypeName = "Beach" },
             new PlaceType { PlaceTypeID = 2, PlaceTypeName = "Hills" },
             new PlaceType { PlaceTypeID = 3, PlaceTypeName = "Fountain" },
             new PlaceType { PlaceTypeID = 4, PlaceTypeName = "Landmark" }
         };
+
         // GET: PlaceController
         public ActionResult Index(string sortOrder, string searchString)
         {
@@ -43,20 +44,20 @@ namespace Tourist_Place.Controllers
             ViewData["RatingSortParm"] = sortOrder == "rating" ? "ratingDesc" 
                                                                : "rating";
             ViewData["CurrentFilter"] = searchString;
-            var tempPlaces = Helper.SearchingAndSortingList(places, searchString, sortOrder);
-            return View(tempPlaces);
+            var selectedPlaces = Helper.SearchingAndSortingList(places, searchString, sortOrder);
+            return View(selectedPlaces);
         }
         // GET: PlaceController/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(string placeName)
         {
-            if(id == null || id >= places.Count)
+            if (string.IsNullOrEmpty(placeName) || !PlaceNameExists(places, placeName))
             {
                 return NotFound();
             }
-            var place = places[(int)id];
+            var place = places.FirstOrDefault(p => p.PlaceName == placeName);
             var index = placeTypes.FindIndex(s => s.PlaceTypeID == place.Type);
             ViewBag.PlaceType = placeTypes[index].PlaceTypeName;
-            ViewData["PlaceID"] = id;
+            ViewData["PlaceName"] = placeName;
             return View(place);
         }
 
@@ -72,7 +73,11 @@ namespace Tourist_Place.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([FromForm]VMPlaces filter)
         {
-            if(ModelState.IsValid)
+            if (PlaceNameExists(places, filter.PlaceName))
+            {
+                ModelState.AddModelError("PlaceName", "The place name already exists");
+            }
+            if (ModelState.IsValid)
             {
                 var PicturePath = UploadFileControl.FileName(filter.Picture,
                                                             string.Concat(_webHostEnvironment.WebRootPath,
@@ -89,34 +94,39 @@ namespace Tourist_Place.Controllers
                 return RedirectToAction(nameof(Index));
             }
             PopulatePlaceTypesDropDownList(filter.Type);
-            return View(filter);
+            return View();
         }
 
+
         // GET: PlaceController/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string placeName)
         {
-            if(id == null || id >= places.Count)
+            if (string.IsNullOrEmpty(placeName) || !PlaceNameExists(places, placeName))
             {
                 return NotFound();
             }
-            var place = places[(int)id];
+            var place = places.FirstOrDefault(p => p.PlaceName == placeName);
             PopulatePlaceTypesDropDownList(place.Type);
-            ViewData["PlaceID"] = id;
+            ViewData["PrevPlaceName"] = placeName;
+            //ViewBag.Place = placeName;
             return View(place);
         }
 
         // POST: PlaceController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, [FromForm] VMPlaces filter)
+        public ActionResult Edit(string prevPlaceName, [FromForm] VMPlaces filter)
         {
-            if(id == null || id >= places.Count)
+            if (string.IsNullOrEmpty(prevPlaceName) || !PlaceNameExists(places, prevPlaceName))
             {
                 return NotFound();
             }
-            try
-            {
-                var index = (int)id;
+           
+                var index = places.FindIndex(p => p.PlaceName == prevPlaceName);
+                if (PlaceNameExists(places, filter.PlaceName) && prevPlaceName != filter.PlaceName)
+                {
+                    ModelState.AddModelError("PlaceName", "The place name already exists");
+                }
                 if (ModelState.IsValid)
                 {
                     var PicturePath = UploadFileControl.FileName(filter.Picture,
@@ -127,51 +137,50 @@ namespace Tourist_Place.Controllers
                     places[index].Type = filter.Type;
                     places[index].Rating = filter.Rating;
                     if(filter.Picture != null ) places[index].Picture = Location.ImagePath + PicturePath;
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
                 PopulatePlaceTypesDropDownList(filter.Type);
+                ViewData["PrevPlaceName"] = prevPlaceName;
                 return View();
-            }
+            
         }
 
         // GET: PlaceController/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(string placeName)
         {
-            if(id==null || id >= places.Count)
+            if (string.IsNullOrEmpty(placeName) || !PlaceNameExists(places, placeName))
             {
                 return NotFound();
             }
-            var place = places[(int)id];
+            var place = places.FirstOrDefault(p => p.PlaceName == placeName);
             var index = placeTypes.FindIndex(s => s.PlaceTypeID == place.Type);
             ViewBag.PlaceType = placeTypes[index].PlaceTypeName;
-            ViewData["PlaceID"] = id;
+            ViewData["PlaceName"] = placeName;
             return View(place);
         }
 
         // POST: PlaceController/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int? id)
+        public ActionResult DeleteConfirmed(string placeName)
         {
-            if(id == null || id >= places.Count)
+            if (string.IsNullOrEmpty(placeName) || !PlaceNameExists(places, placeName))
             {
                 return NotFound();
             }
 
             try
             {
+                var id = places.FindIndex(p => p.PlaceName == placeName);
                 places.RemoveAt((int)id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                var place = places[(int)id];
+                var place = places.FirstOrDefault(p => p.PlaceName == placeName);
                 var index = placeTypes.FindIndex(s => s.PlaceTypeID == place.Type);
                 ViewBag.PlaceType = placeTypes[index].PlaceTypeName;
-                ViewData["PlaceID"] = id;
+                ViewData["PlaceName"] = placeName;
                 return View(place);
             }
         }
@@ -182,6 +191,11 @@ namespace Tourist_Place.Controllers
                                                 "PlaceTypeID",
                                                 "PlaceTypeName",
                                                 selectedType);
+        }
+
+        private bool PlaceNameExists(List<Place> places, string placeName)
+        {
+           return places.Any(s => s.PlaceName.ToLower() == placeName.ToLower());
         }
     }
 }

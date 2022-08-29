@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    int i = 0;
 }
 
 <form asp-action="Index" method="get" name="SearchForm">
@@ -57,12 +56,11 @@
                     <img src="@Url.Content(item.Picture)" class="img-thumbnail img-fluid img-resize"/>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@i" type="button" class="btn btn-primary">Edit</a> 
-                <a asp-action="Details" asp-route-id="@i" type="button" class="btn btn-success">Details</a>
-                <a asp-action="Delete" asp-route-id="@i" type="button" class="btn btn-danger">Delete</a>
+                <a asp-action="Edit" asp-route-placeName="@item.PlaceName" type="button" class="btn btn-primary">Edit</a> 
+                <a asp-action="Details" asp-route-placeName="@item.PlaceName" type="button" class="btn btn-success">Details</a>
+                <a asp-action="Delete" asp-route-placeName="@item.PlaceName" type="button" class="btn btn-danger">Delete</a>
             </td>
         </tr>
-        i++;
 }
     </tbody>
 </table>

@@ -41,7 +41,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="@ViewData["PlaceID"]" />
+        <input type="hidden" asp-for=@ViewData["PlaceName"] name="placeName"/>
         <input type="submit" value="Delete" class="btn btn-danger" />
         <a asp-action="Index" class="btn btn-success">Back to Tourist Place List</a>
     </form>

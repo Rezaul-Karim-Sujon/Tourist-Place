@@ -8,6 +8,7 @@ namespace Tourist_Place.Models.Entity
         //public int PlaceID { get; set; }
 
         [Required]
+        [Key]
         [Display(Name = "Name")]
         public string PlaceName { get; set; }
 
